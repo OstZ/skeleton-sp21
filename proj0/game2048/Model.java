@@ -114,11 +114,22 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        //set view perspective
+
+        
+
+        //restore view perspective
+
+
+
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
+    }
+    private boolean dealCol(Board board, int j){
+        return false;
     }
 
     /** Checks if the game is over and sets the gameOver variable
@@ -138,6 +149,10 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        int size = b.size();
+        for(int i = 0; i < size; ++i)
+            for(int j = 0; j  < size; ++j)
+                if(b.tile(i, j) == null) return true;
         return false;
     }
 
@@ -148,6 +163,11 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int size = b.size();
+        for(int i = 0; i < size; ++i)
+            for(int j = 0; j  < size; ++j)
+                if(b.tile(i, j) != null
+                        && b.tile(i, j).value() == MAX_PIECE) return true;
         return false;
     }
 
@@ -159,6 +179,18 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b)) return true;
+        int size = b.size();
+        for(int i = 0; i < size; ++i)
+            for(int j = 0; j  < size; ++j){
+                int l = -1, r = -1, u = -1, d = -1;
+                if(i - 1 >= 0) l = b.tile(i - 1, j).value();
+                if(j - 1 >= 0) u = b.tile(i, j - 1).value();
+                if(i + 1 < size) r = b.tile(i + 1, j).value();
+                if(j + 1 < size) d = b.tile(i, j + 1).value();
+                int tmpV = b.tile(i, j).value();
+                if(l ==tmpV || r == tmpV || u == tmpV || d == tmpV) return true;
+            }
         return false;
     }
 
