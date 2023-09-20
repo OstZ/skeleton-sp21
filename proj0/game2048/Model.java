@@ -115,21 +115,38 @@ public class Model extends Observable {
         // changed local variable to true.
 
         //set view perspective
+        board.setViewingPerspective(side);
 
-        
+        for(int c = 0; c < board.size(); ++c){
+            if(dealCol(board, c)) changed = true;
 
-        //restore view perspective
+        }
 
-
-
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
-    private boolean dealCol(Board board, int j){
-        return false;
+
+    private boolean dealCol(Board board, int c){
+        int one = board.size() - 1;
+        boolean change = false;
+        for(int two = one; two >= 0; --two){
+            Tile tmp2 = board.tile(c, two);
+            if(tmp2 != null && one != two) {
+                Tile tmp1 = board.tile(c, one);
+                if(tmp1 == null) board.move(c, one, tmp2);
+                else if(tmp1.value() == tmp2.value()) {
+                    score += 2 * tmp1.value();
+                    board.move(c, one--, tmp2);
+                }
+                else board.move(c, --one, tmp2);
+                change = true;
+            }
+        }
+        return change;
     }
 
     /** Checks if the game is over and sets the gameOver variable
